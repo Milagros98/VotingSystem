@@ -13,6 +13,13 @@ namespace VotingSystem.Database
 
         }
 
-        public DbSet<State> State { get; set; }
+        protected override void OnModelCreating(DbModelBuilder modelBuilder)
+        {
+            // base.OnModelCreating(modelBuilder);
+        }
+
+
+        // models
+        public DbSet<State> States { get; set; }
     }
 }
