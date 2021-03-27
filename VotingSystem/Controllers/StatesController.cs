@@ -83,7 +83,7 @@ namespace VotingSystem.Controllers
                 db.Entry(state).State = EntityState.Modified;
                 db.SaveChanges();
 
-            } catch (Exception ex)
+            } catch
             {
                 throw;
             }
@@ -128,16 +128,18 @@ namespace VotingSystem.Controllers
         }
 
         [HttpPost]
-        public ActionResult Delete(State state)
+        public ActionResult Delete(int id, State state)
         {
-  
+
+            state = db.States.Find(id);
+
             try
             {
-                db.Entry(state).State = EntityState.Deleted;
+                db.States.Remove(state);
                 db.SaveChanges();
 
             }
-            catch
+            catch 
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
