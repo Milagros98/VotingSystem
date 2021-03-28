@@ -15,7 +15,6 @@ namespace VotingSystem
     {
         protected void Application_Start()
         {
-            //Database.SetInitializer(new MigrateDatabaseToLatestVersion<DBContext, Configuration>());
             AreaRegistration.RegisterAllAreas();
             FilterConfig.RegisterGlobalFilters(GlobalFilters.Filters);
             RouteConfig.RegisterRoutes(RouteTable.Routes);

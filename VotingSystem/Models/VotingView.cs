@@ -6,9 +6,8 @@ using System.Web;
 
 namespace VotingSystem.Models
 {
-    public class Voting
+    public class VotingView
     {
-        [Key]
         public int votingId { get; set; }
 
         [Required(ErrorMessage = "The field {0} is required.")]
@@ -26,16 +25,29 @@ namespace VotingSystem.Models
         public string remarks { get; set; }
 
         [Required(ErrorMessage = "The field {0} is required.")]
-        [Display(Name = "Date time start")]
-        [DataType(DataType.DateTime)]
-        [DisplayFormat(DataFormatString = "{0:yyyy:MM:dd hh:mm tt}", ApplyFormatInEditMode = true)]
-        public DateTime dateTimeStart { get; set; }
+        [Display(Name = "Date start")]
+        [DataType(DataType.Date)]
+        [DisplayFormat(DataFormatString = "{0:yyyy:MM:dd}", ApplyFormatInEditMode = true)]
+        public DateTime dateStart { get; set; }
+
 
         [Required(ErrorMessage = "The field {0} is required.")]
-        [Display(Name = "Date time end")]
-        [DataType(DataType.DateTime)]
-        [DisplayFormat(DataFormatString = "{0:yyyy:MM:dd hh:mm tt}", ApplyFormatInEditMode = true)]
-        public DateTime dateTimeEnd { get; set; }
+        [Display(Name = "Date end")]
+        [DataType(DataType.Date)]
+        [DisplayFormat(DataFormatString = "{0:yyyy:MM:dd}", ApplyFormatInEditMode = true)]
+        public DateTime dateEnd { get; set; }
+
+        [Required(ErrorMessage = "The field {0} is required.")]
+        [Display(Name = "Time start")]
+        [DataType(DataType.Time)]
+        [DisplayFormat(DataFormatString = "{0:hh:mm tt}", ApplyFormatInEditMode = true)]
+        public DateTime timeStart { get; set; }
+
+        [Required(ErrorMessage = "The field {0} is required.")]
+        [Display(Name = "Time end")]
+        [DataType(DataType.Time)]
+        [DisplayFormat(DataFormatString = "{0:hh:mm tt}", ApplyFormatInEditMode = true)]
+        public DateTime timeEnd { get; set; }
 
         [Required(ErrorMessage = "The field {0} is required.")]
         [Display(Name = "Is For All Users?")]
@@ -44,17 +56,5 @@ namespace VotingSystem.Models
         [Required(ErrorMessage = "The field {0} is required.")]
         [Display(Name = "Is Enabled Blank Votes?")]
         public bool isEnabledBlankVotes { get; set; }
-
-        [Display(Name = "Quantity Votes")]
-        public int quantityVotes { get; set; }
-
-        [Display(Name = "Quantity Blank Votes")]
-        public int quantityBlankVotes { get; set; }
-
-        [Display(Name = "Winner")]
-        public int candidateWinId { get; set; }
-
-
-        public virtual State State { get; set; }
     }
 }

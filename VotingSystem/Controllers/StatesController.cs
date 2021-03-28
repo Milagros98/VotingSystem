@@ -132,16 +132,24 @@ namespace VotingSystem.Controllers
         {
 
             state = db.States.Find(id);
+            db.States.Remove(state);
 
             try
-            {
-                db.States.Remove(state);
+            {               
                 db.SaveChanges();
-
             }
-            catch 
+            catch (Exception ex)
             {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+                if (ex.InnerException != null &&
+                   ex.InnerException.InnerException != null &&
+                   ex.InnerException.InnerException.Message.Contains("REFERENCE"))
+                {
+                    ViewBag.Error = "This field has relationed records";
+                }
+                else
+                {
+                    ViewBag.Error = ex.Message;
+                }
             }
             return RedirectToAction("Index");
         }

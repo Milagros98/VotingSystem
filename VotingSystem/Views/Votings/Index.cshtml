@@ -1,0 +1,81 @@
+﻿@model IEnumerable<VotingSystem.Models.Voting>
+
+@{
+    ViewBag.Title = "Index";
+}
+
+<h2>Index</h2>
+
+<p>
+    @Html.ActionLink("Create New", "Create")
+</p>
+<table class="table">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.description)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.remarks)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.dateTimeStart)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.dateTimeEnd)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.isForAllUsers)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.isEnabledBlankVotes)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.quantityVotes)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.quantityBlankVotes)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.candidateWinId)
+        </th>
+        <th></th>
+    </tr>
+
+@foreach (var item in Model) {
+    <tr>
+        <td>
+            @Html.DisplayFor(modelItem => item.description)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.remarks)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.dateTimeStart)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.dateTimeEnd)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.isForAllUsers)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.isEnabledBlankVotes)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.quantityVotes)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.quantityBlankVotes)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.candidateWinId)
+        </td>
+        <td>
+            @Html.ActionLink("Edit", "Edit", new { id=item.votingId }) |
+            @Html.ActionLink("Details", "Details", new { id=item.votingId }) |
+            @Html.ActionLink("Delete", "Delete", new { id=item.votingId })
+        </td>
+    </tr>
+}
+
+</table>

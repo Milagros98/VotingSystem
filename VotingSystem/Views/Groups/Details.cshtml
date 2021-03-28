@@ -1,0 +1,76 @@
+﻿@model VotingSystem.Models.GroupDetailsView
+
+@{
+    ViewBag.Title = "Details";
+}
+
+<h2>Details</h2>
+
+<div>
+    <h4>Group</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.description)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.description)
+        </dd>
+
+    </dl>
+</div>
+<p>
+    @Html.ActionLink("Edit", "Edit", new { id = Model.groupId }, new { @class = "btn btn-warning" })
+    @Html.ActionLink("Add Members", "AddMembers", new { id = Model.groupId }, new { @class = "btn btn-default" })
+    @Html.ActionLink("Back to List", "Index", new { }, new { @class = "btn btn-primary" })
+</p>
+<h3>Members</h3>
+
+@if (Model.members.Count == 0)
+{
+    <h4>There's not members in this group</h4>
+}
+else
+{
+<table class="table">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => Model.members[0].User.userName)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => Model.members[0].User.fullName)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => Model.members[0].User.photo)
+        </th>
+
+        <th></th>
+    </tr>
+
+    @for (int i = 0; i < Model.members.Count; i++)
+    {
+        <tr>
+            <td>
+                @Html.DisplayFor(model => Model.members[i].User.userName)
+            </td>
+            <td>
+                @Html.DisplayFor(mmodel => Model.members[i].User.userName)
+            </td>
+            <td>
+                @if (!string.IsNullOrEmpty(Model.members[i].User.photo))
+                {
+                    <img src="@Url.Content(Model.members[i].User.photo)" alt="Image" style="height:100px; width:100px; max-width:100%; max-height: auto;"><img />
+                }
+            </td>
+
+            <td>
+                @Html.ActionLink("Delete", "DeleteMember", new { id = Model.members[i].User.userId}, new { @class = "btn btn-danger", onclick= "return confirm('Are you sure to delete this member?')" })
+            </td>
+        </tr>
+    }
+
+</table>
+
+}
+

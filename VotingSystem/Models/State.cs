@@ -15,5 +15,7 @@ namespace VotingSystem.Models
         [MinLength(5, ErrorMessage = "The field {0} must had minimun {1} characters")]
         [MaxLength(100, ErrorMessage = "The field {0} must had maximun {1} characters")]
         public string description { get; set; }
+
+        public virtual ICollection<Voting> Voting { get; set; }
     }
 }

@@ -11,6 +11,7 @@ namespace VotingSystem.Migrations
         {
             AutomaticMigrationsEnabled = true;
             AutomaticMigrationDataLossAllowed = true;
+            ContextKey = "VotingSystem.Database.DBContext";
         }
 
         protected override void Seed(VotingSystem.Database.DBContext context)
