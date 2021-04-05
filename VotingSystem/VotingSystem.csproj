@@ -58,6 +58,7 @@
       <HintPath>..\packages\System.Data.SqlClient.4.8.2\lib\net461\System.Data.SqlClient.dll</HintPath>
     </Reference>
     <Reference Include="System.Drawing" />
+    <Reference Include="System.Numerics" />
     <Reference Include="System.Web.DynamicData" />
     <Reference Include="System.Web.Entity" />
     <Reference Include="System.Web.ApplicationServices" />
@@ -181,29 +182,30 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
-    <Compile Include="Migrations\202103270302013_InitialCreate.cs" />
-    <Compile Include="Migrations\202103270302013_InitialCreate.Designer.cs">
-      <DependentUpon>202103270302013_InitialCreate.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\202103270356446_202103270302013.cs" />
-    <Compile Include="Migrations\202103270356446_202103270302013.Designer.cs">
-      <DependentUpon>202103270356446_202103270302013.cs</DependentUpon>
-    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
+    <Compile Include="Models\AddCandidateView.cs" />
+    <Compile Include="Models\AddGroupView.cs" />
     <Compile Include="Models\AddMemberView.cs" />
+    <Compile Include="Models\Candidate.cs" />
+    <Compile Include="Models\DetailsVotingView.cs" />
     <Compile Include="Models\Group.cs" />
     <Compile Include="Models\GroupDetailsView.cs" />
     <Compile Include="Models\GroupMembers.cs" />
     <Compile Include="Models\IdentityModels.cs" />
     <Compile Include="Models\ManageViewModels.cs" />
+    <Compile Include="Models\RegisterUserView.cs" />
     <Compile Include="Models\State.cs" />
     <Compile Include="Models\User.cs" />
+    <Compile Include="Models\UserIndexView.cs" />
     <Compile Include="Models\UserView.cs" />
+    <Compile Include="Models\Utilities.cs" />
     <Compile Include="Models\Voting.cs" />
+    <Compile Include="Models\VotingGroup.cs" />
     <Compile Include="Models\VotingView.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Startup.cs" />
+    <Compile Include="Utilities.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Content\bootstrap-theme.css" />
@@ -282,6 +284,8 @@
     <Content Include="Views\Users\Edit.cshtml" />
     <Content Include="Views\Users\Index.cshtml" />
     <Content Include="Views\Groups\AddMembers.cshtml" />
+    <Content Include="Views\Votings\AddGroup.cshtml" />
+    <Content Include="Views\Votings\AddCandidate.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
@@ -299,14 +303,6 @@
     <None Include="packages.config" />
     <Content Include="Scripts\jquery-3.4.1.slim.min.map" />
     <Content Include="Scripts\jquery-3.4.1.min.map" />
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="Migrations\202103270302013_InitialCreate.resx">
-      <DependentUpon>202103270302013_InitialCreate.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\202103270356446_202103270302013.resx">
-      <DependentUpon>202103270356446_202103270302013.cs</DependentUpon>
-    </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

@@ -1,4 +1,4 @@
-﻿@model VotingSystem.Models.Voting
+﻿@model VotingSystem.Models.DetailsVotingView
 
 @{
     ViewBag.Title = "Details";
@@ -93,6 +93,100 @@
     </dl>
 </div>
 <p>
-    @Html.ActionLink("Edit", "Edit", new { id = Model.votingId }, new { @class="btn btn-warning"}) 
+    @Html.ActionLink("Edit", "Edit", new { id = Model.votingId }, new { @class = "btn btn-warning" })
+    @if (!Model.isForAllUsers)
+    {
+        @Html.ActionLink("Add Group", "AddGroup", new { id = Model.votingId }, new { @class = "btn btn-default" })
+    }
+    @Html.ActionLink("Add Candidate", "AddCandidate", new { id = Model.votingId }, new { @class = "btn btn-default" })
     @Html.ActionLink("Back to List", "Index", new { }, new { @class = "btn btn-primary" })
 </p>
+
+<div class="row">
+    <div class="col-md-6">
+        <section id="groups">
+            @if (Model.VotingGroups.Count == 0)
+            {
+                <h3>There's not groups in this voting</h3>
+            }
+            else
+            {
+                <table class="table">
+                    <tr>
+                        <th>
+                            @Html.DisplayNameFor(model => Model.VotingGroups[0].group.description)
+                        </th>
+                 
+
+                        <th></th>
+                    </tr>
+
+                    @for (int i = 0; i < Model.VotingGroups.Count; i++)
+                    {
+                        <tr>
+                            <td>
+                                @Html.DisplayFor(model => Model.VotingGroups[i].group.description)
+                            </td>
+                            <td>
+                                @Html.ActionLink("Delete", "DeleteVotingGroup", new { id = Model.VotingGroups[i].votingGroupId }, new { @class = "btn btn-danger", onclick = "return confirm('Are you sure to delete this group from this voting?')" })
+                            </td>
+                        </tr>
+                    }
+
+                </table>
+            }
+
+        </section>
+
+    </div>
+    <div class="col-md-6">
+        <section id="candidates">
+            @if (Model.Candidates.Count == 0)
+            {
+                <h3>There's not candidates in this voting</h3>
+            }
+            else
+            {
+                <table class="table">
+                    <tr>
+                        <th>
+                            @Html.DisplayNameFor(model => Model.Candidates[0].User.userName)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => Model.Candidates[0].User.fullName)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => Model.Candidates[0].User.photo)
+                        </th>
+
+                        <th></th>
+                    </tr>
+
+                    @for (int i = 0; i < Model.Candidates.Count; i++)
+                    {
+                        <tr>
+                            <td>
+                                @Html.DisplayFor(model => Model.Candidates[i].User.userName)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(mmodel => Model.Candidates[i].User.fullName)
+                            </td>
+                            <td>
+                                @if (!string.IsNullOrEmpty(Model.Candidates[i].User.photo))
+                                {
+                                    <img src="@Url.Content(Model.Candidates[i].User.photo)" alt="Image" style="height:100px; width:100px; max-width:100%; max-height: auto;"><img />
+                                }
+                            </td>
+
+                            <td>
+                                @Html.ActionLink("Delete", "DeleteCandidate", new { id = Model.Candidates[i].candidateId }, new { @class = "btn btn-danger", onclick = "return confirm('Are you sure to delete this candidate?')" })
+                            </td>
+                        </tr>
+                    }
+
+                </table>
+            }
+        </section>
+
+    </div>
+</div>

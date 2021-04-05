@@ -6,9 +6,8 @@ using System.Web;
 
 namespace VotingSystem.Models
 {
-    public class Voting
+    public class DetailsVotingView
     {
-        [Key]
         public int votingId { get; set; }
 
         [Required(ErrorMessage = "The field {0} is required.")]
@@ -54,9 +53,8 @@ namespace VotingSystem.Models
         [Display(Name = "Winner")]
         public int candidateWinId { get; set; }
 
-
-        public virtual State State { get; set; }
-        public virtual ICollection<VotingGroup> VotingGroups { get; set; }
-        public virtual ICollection<Candidate> Candidates { get; set; }
+        public State State { get; set; }
+        public List<VotingGroup> VotingGroups { get; set; }
+        public List<Candidate> Candidates { get; set; }
     }
 }

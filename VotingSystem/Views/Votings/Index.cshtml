@@ -71,9 +71,9 @@
             @Html.DisplayFor(modelItem => item.candidateWinId)
         </td>
         <td>
-            @Html.ActionLink("Edit", "Edit", new { id=item.votingId }) |
-            @Html.ActionLink("Details", "Details", new { id=item.votingId }) |
-            @Html.ActionLink("Delete", "Delete", new { id=item.votingId })
+            @Html.ActionLink("Edit", "Edit", new { id=item.votingId }, new { @class="btn btn-warning"}) 
+            @Html.ActionLink("Details", "Details", new { id=item.votingId }, new { @class = "btn btn-info" }) 
+            @Html.ActionLink("Delete", "Delete", new { id=item.votingId }, new { @class = "btn btn-danger" })
         </td>
     </tr>
 }

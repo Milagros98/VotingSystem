@@ -10,7 +10,7 @@ using VotingSystem.Models;
 
 namespace VotingSystem.Controllers
 {
-    [Authorize]
+    [Authorize(Roles = "Admin")]
     public class StatesController : Controller
     {
 

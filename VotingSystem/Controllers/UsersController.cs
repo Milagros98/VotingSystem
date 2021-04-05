@@ -7,6 +7,7 @@ using System.Data.Entity;
 using System.IO;
 using System.Linq;
 using System.Net;
+using System.Net.Mail;
 using System.Web;
 using System.Web.Mvc;
 using VotingSystem.Database;
@@ -97,6 +98,14 @@ namespace VotingSystem.Controllers
             {
                 db.SaveChanges();
                 this.CreateSAPUser(userView);
+                var smtpClient = new SmtpClient("smtp.gmail.com")
+                {
+                    Port = 587,
+                    Credentials = new NetworkCredential("email", "password"),
+                    EnableSsl = true,
+                };
+
+                smtpClient.Send("rruizmcp@gmail.com", user.userName, "Registro exitoso", "¡Felicidades! Te has registrado en el sistema");
 
             } catch (Exception ex)
             {
@@ -273,7 +282,25 @@ namespace VotingSystem.Controllers
         public ActionResult DeleteConfirmed(int id)
         {
             User user = db.Users.Find(id);
-            db.Users.Remove(user);
+           
+            try
+            {
+                db.Users.Remove(user);
+            }
+            catch (Exception ex)
+            {
+
+                if (ex.InnerException != null &&
+                    ex.InnerException.InnerException != null &&
+                    ex.InnerException.InnerException.Message.Contains("REFERENCE")) 
+                {
+                    ModelState.AddModelError(string.Empty, "The record cannot be delete because has related records");
+
+                } else 
+                {
+
+                }
+            }
             db.SaveChanges();
             return RedirectToAction("Index");
         }

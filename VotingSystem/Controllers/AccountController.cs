@@ -1,13 +1,16 @@
 ﻿using System;
 using System.Globalization;
+using System.IO;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
 using Microsoft.AspNet.Identity;
+using Microsoft.AspNet.Identity.EntityFramework;
 using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin.Security;
+using VotingSystem.Database;
 using VotingSystem.Models;
 
 namespace VotingSystem.Controllers
@@ -17,6 +20,7 @@ namespace VotingSystem.Controllers
     {
         private ApplicationSignInManager _signInManager;
         private ApplicationUserManager _userManager;
+        private readonly DBContext db = new DBContext();
 
         public AccountController()
         {
@@ -147,29 +151,92 @@ namespace VotingSystem.Controllers
         [HttpPost]
         [AllowAnonymous]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Register(RegisterViewModel model)
+        public async Task<ActionResult> Register(RegisterUserView userView)
         {
             if (ModelState.IsValid)
             {
-                var user = new ApplicationUser { UserName = model.Email, Email = model.Email };
-                var result = await UserManager.CreateAsync(user, model.Password);
-                if (result.Succeeded)
-                {
-                    await SignInManager.SignInAsync(user, isPersistent:false, rememberBrowser:false);
-                    
-                    // Para obtener más información sobre cómo habilitar la confirmación de cuentas y el restablecimiento de contraseña, visite https://go.microsoft.com/fwlink/?LinkID=320771
-                    // Enviar correo electrónico con este vínculo
-                    // string code = await UserManager.GenerateEmailConfirmationTokenAsync(user.Id);
-                    // var callbackUrl = Url.Action("ConfirmEmail", "Account", new { userId = user.Id, code = code }, protocol: Request.Url.Scheme);
-                    // await UserManager.SendEmailAsync(user.Id, "Confirmar cuenta", "Para confirmar la cuenta, haga clic <a href=\"" + callbackUrl + "\">aquí</a>");
+                var pic = string.Empty;
 
-                    return RedirectToAction("Index", "Home");
+                if(userView.photo != null)
+                {
+                    Utilities.UploadPhoto(userView.photo);
+                    pic = Path.GetFileName(userView.photo.FileName);
                 }
-                AddErrors(result);
+                
+                // create user
+                var user = new User
+                {
+                    userId = userView.userId,
+                    userName = userView.userName,
+                    firtsName = userView.firtsName,
+                    lastName = userView.lastName,
+                    phone = userView.phone,
+                    address = userView.address,
+                    grade = userView.grade,
+                    group = userView.group,
+                    photo = string.IsNullOrEmpty(pic) ? string.Empty : string.Format("/Content/Photos/{0}", pic),
+                };
+
+                // save record
+                db.Users.Add(user);
+                try
+                {
+                    db.SaveChanges();
+                    var userASP = this.CreateSAPUser(userView);
+                    await SignInManager.SignInAsync(userASP, isPersistent: false, rememberBrowser: false);
+                    return RedirectToAction("Index", "Home");
+
+                }
+                catch (Exception ex)
+                {
+                    if (ex.InnerException != null &&
+                        ex.InnerException.InnerException != null &&
+                        ex.InnerException.InnerException.Message.Contains("UsernameIndex"))
+                    {
+                        ViewBag.Error = "The email has been register";
+                    }
+                    else
+                    {
+                        ViewBag.Error = ex.Message;
+                    }
+                    return View(userView);
+                }
+   
+            }
+            // Si llegamos a este punto, es que se ha producido un error y volvemos a mostrar el formulario
+            return View(userView);
+        }
+
+        private ApplicationUser CreateSAPUser(RegisterUserView userView)
+        {
+            // user managment
+            var userContext = new ApplicationDbContext();
+            var userManager = new UserManager<ApplicationUser>(new UserStore<ApplicationUser>(userContext));
+            var roleManager = new RoleManager<IdentityRole>(new RoleStore<IdentityRole>(userContext));
+
+            // create role
+            string roleName = "User";
+
+            // Check if the roleName already exists
+            if (!roleManager.RoleExists(roleName))
+            {
+                roleManager.Create(new IdentityRole(roleName));
             }
 
-            // Si llegamos a este punto, es que se ha producido un error y volvemos a mostrar el formulario
-            return View(model);
+            // create de ASP Net User
+            var userASP = new ApplicationUser
+            {
+                UserName = userView.userName,
+                PhoneNumber = userView.phone,
+                Email = userView.userName,
+            };
+
+            userManager.Create(userASP, userView.Password);
+
+            // add user to role
+            userASP = userManager.FindByName(userView.userName);
+            userManager.AddToRole(userASP.Id, "User");
+            return userASP;
         }
 
         //

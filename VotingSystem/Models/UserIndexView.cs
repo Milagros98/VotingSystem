@@ -7,8 +7,8 @@ using System.Web;
 
 namespace VotingSystem.Models
 {
-    public class User
-    {   [Key]
+    public class UserIndexView : User
+    {
         public int userId { get; set; }
 
         [Required(ErrorMessage = "The field {0} is required.")]
@@ -16,7 +16,7 @@ namespace VotingSystem.Models
         [MaxLength(100, ErrorMessage = "The field {0} must had maximun {1} characters")]
         [DataType(DataType.EmailAddress)]
         [Display(Name = "Email")]
-        [Index("UsernameIndex", IsUnique= true)]
+        [Index("UsernameIndex", IsUnique = true)]
         public string userName { get; set; }
 
         [Required(ErrorMessage = "The field {0} is required.")]
@@ -29,9 +29,7 @@ namespace VotingSystem.Models
         [MinLength(5, ErrorMessage = "The field {0} must had minimun {1} characters")]
         [MaxLength(100, ErrorMessage = "The field {0} must had maximun {1} characters")]
         [Display(Name = "Last Name")]
-        public string lastName { get; set;  }
-
-        public string fullName { get { return string.Format("{0} {1}", this.firtsName, this.lastName); } }
+        public string lastName { get; set; }
 
         [Required(ErrorMessage = "The field {0} is required.")]
         [MinLength(5, ErrorMessage = "The field {0} must had minimun {1} characters")]
@@ -55,10 +53,14 @@ namespace VotingSystem.Models
         [MaxLength(20, ErrorMessage = "The field {0} must had maximun {1} characters")]
         public string group { get; set; }
 
-        [DataType(DataType.ImageUrl)]
-        public string photo { get; set; }
+        [Display(Name = "Is Admin?")]
+        public bool isAdmin { get; set; }
+
+        public HttpPostedFileBase photo { get; set; }
 
         public virtual ICollection<GroupMembers> GroupMembers { get; set; }
         public virtual ICollection<Candidate> Candidates { get; set; }
+
+
     }
 }

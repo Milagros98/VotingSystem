@@ -23,7 +23,124 @@ namespace VotingSystem.Controllers
             return View(votings.ToList());
         }
 
+        [HttpGet]
+        [Authorize(Roles = "Admin")]
+        public ActionResult DeleteVotingGroup(int id)
+        {
+            var votingGroup= db.VotingGroups.Find(id);
+            if (votingGroup != null)
+            {
+
+                db.VotingGroups.Remove(votingGroup);
+                db.SaveChanges();
+            }
+
+
+            return RedirectToAction(string.Format("Details/{0}", votingGroup.votingId));
+        }
+
+        [HttpGet]
+        [Authorize(Roles = "Admin")]
+        public ActionResult DeleteCandidate(int id)
+        {
+            var candidate = db.Candidates.Find(id);
+            if (candidate != null)
+            {
+
+                db.Candidates.Remove(candidate);
+                db.SaveChanges();
+            }
+
+
+            return RedirectToAction(string.Format("Details/{0}", id));
+        }
+
+        [HttpGet]
+        [Authorize(Roles = "Admin")]
+        public ActionResult AddGroup(int id)
+        {
+            ViewBag.groupId = new SelectList(db.Groups.OrderBy(g => g.description), "groupId", "description");
+
+            var view = new AddGroupView
+            {
+                votingId = id,
+            };
+            return View(view);
+        }
+
+        [HttpPost]
+        public ActionResult AddGroup(AddGroupView view)
+        {
+            ViewBag.groupId = new SelectList(db.Groups.OrderBy(g => g.description), "groupId", "description");
+
+            if (!ModelState.IsValid)             
+            {               
+                return View(view);
+            }
+            var votingGroup = db.VotingGroups.Where(vg => vg.votingId == view.votingId && vg.groupId == view.groupId).FirstOrDefault();
+
+            if (votingGroup != null)
+            {
+                ViewBag.Error = "The group already belongs to this voting";
+                return View(view);
+            }
+
+            var group = new VotingGroup
+            {
+                votingId = view.votingId,
+                groupId = view.groupId,
+            };
+
+            db.VotingGroups.Add(group);
+            db.SaveChanges();
+
+            return RedirectToAction(string.Format("Details/{0}", group.votingId));
+        }
+
+        [HttpGet]
+        [Authorize(Roles = "Admin")]
+        public ActionResult AddCandidate(int id)
+        {
+            ViewBag.userId = new SelectList(db.Users.OrderBy(g => g.firtsName).ThenBy(g => g.lastName), "userId", "fullName");
+
+            var view = new AddCandidateView
+            {
+                votingId = id,
+            };
+            return View(view);
+        }
+
+        [HttpPost]
+        public ActionResult AddCandidate(AddCandidateView view)
+        {
+            ViewBag.userId = new SelectList(db.Users.OrderBy(g => g.firtsName).ThenBy(g => g.lastName), "userId", "fullName");
+
+            if (!ModelState.IsValid)
+            {
+                return View(view);
+            }
+            var candidate = db.Candidates.Where(vg => vg.votingId == view.votingId && vg.userId == view.userId).FirstOrDefault();
+
+            if (candidate != null)
+            {
+                ViewBag.Error = "The user already is candidate to this voting";
+                return View(view);
+            }
+
+            var candidateUser = new Candidate
+            {
+                votingId = view.votingId,
+                userId = view.userId,
+            };
+
+            db.Candidates.Add(candidateUser);
+            db.SaveChanges();
+
+            return RedirectToAction(string.Format("Details/{0}", view.votingId));
+        }
+
         // GET: Votings/Details/5
+        [Authorize(Roles = "Admin")]
         public ActionResult Details(int? id)
         {
             if (id == null)
@@ -38,10 +155,29 @@ namespace VotingSystem.Controllers
                 return HttpNotFound();
             }
 
-            return View(voting);
+            var detailsView = new DetailsVotingView
+            {
+                votingId = voting.votingId,
+                description = voting.description,
+                stateId = voting.stateId,
+                remarks = voting.remarks,
+                dateTimeEnd = voting.dateTimeEnd,
+                dateTimeStart = voting.dateTimeStart,
+                isEnabledBlankVotes = voting.isEnabledBlankVotes,
+                isForAllUsers = voting.isForAllUsers,
+                quantityBlankVotes = voting.quantityBlankVotes,
+                quantityVotes = voting.quantityVotes,
+                candidateWinId = voting.candidateWinId,
+                Candidates = voting.Candidates.ToList(),
+                VotingGroups = voting.VotingGroups.ToList(),
+
+            };
+
+            return View(detailsView);
         }
 
         // GET: Votings/Create
+        [Authorize(Roles = "Admin")]
         public ActionResult Create()
         {
             ViewBag.stateId = new SelectList(db.States, "stateId", "description");
@@ -98,6 +234,7 @@ namespace VotingSystem.Controllers
         }
 
         // GET: Votings/Edit/5
+        [Authorize(Roles = "Admin")]
         public ActionResult Edit(int? id)
         {
             if (id == null)
@@ -170,6 +307,7 @@ namespace VotingSystem.Controllers
         }
 
         // GET: Votings/Delete/5
+        [Authorize(Roles = "Admin")]
         public ActionResult Delete(int? id)
         {
             if (id == null)
